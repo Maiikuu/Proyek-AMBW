@@ -1,0 +1,59 @@
+0 Perbudakan Mesir - 1
+1 Perbudakan Mesir - 2
+2 Perintah Raja
+3 Musa Lahir - 1
+4 Musa Lahir - 2
+5 Musa Lahir - 1
+6 Musa Lahir - 2
+7 Diselamatkan Putri Raja - 1
+8 Diselamatkan Putri Raja - 2
+9 Musa Membela Budak Ibrani - 1
+10 Musa Membela Budak Ibrani - 2
+11 Yitro Menyambut Musa - 1
+12 Yitro Menyambut Musa - 2
+13 Semak yang Menyala - 1
+14 Semak yang Menyala - 2
+15 Musa Membuat Mukjizat - 1
+16 Musa Membuat Mukjizat - 2
+17 Harun dan Musa - 1
+18 Harun dan Musa - 2
+19 Biarkanlah Umat-Ku Pergi - 1
+20 Biarkanlah Umat-Ku Pergi - 2
+21 Darah dan Katak - 1
+22 Darah dan Katak - 2
+23 Nyamuk dan Lalat - 1
+24 Nyamuk dan Lalat - 2
+25 Penyakit dan Bisul - 1
+26 Penyakit dan Bisul - 2
+27 Hujan Es dan Belalang - 1
+28 Hujan Es dan Belalang - 2
+29 Kegelapan dan Kematian - 1
+30 Kegelapan dan Kematian - 2
+31 Tuhan Menepati Janji-Nya - 1
+32 Tuhan Menepati Janji-Nya - 2
+33 Orang Israel Keluar dari Mesir - 1
+34 Orang Israel Keluar dari Mesir - 2
+35 Dikejar Tentara Mesir - 1
+36 Dikejar Tentara Mesir - 2
+37 Laut Merah Dibelah - 1
+38 Laut Merah Dibelah - 2
+39 Air bagi yang Haus - 1
+40 Air bagi yang Haus - 2
+41 Makanan bagi yang Lapar - 1
+42 Makanan bagi yang Lapar - 2
+43 Umat Meragukan Tuhan - 1
+44 Umat Meragukan Tuhan - 2
+45 Di Kaki Gunung Sinai - 1
+46 Di Kaki Gunung Sinai - 2
+47 Sepuluh Firman - 1
+48 Sepuluh Firman - 2
+49 Janji Tuhan bagi Israel - 1
+50 Janji Tuhan bagi Israel - 2
+51 Umat Mau Menaati Tuhan - 1
+52 Umat Mau Menaati Tuhan - 2
+53 Lembu Emas - 1
+54 Lembu Emas - 2
+55 Musa Menghancurkan Berhala - 1
+56 Musa Menghancurkan Berhala - 2
+57 Tuhan Berbelas Kasih - 1
+58 Tuhan Berbelas Kasih - 2
