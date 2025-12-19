@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/data_buku.dart';
 import 'login.dart';
 
@@ -35,9 +35,18 @@ class _VerifikasiEmailPageState extends State<VerifikasiEmailPage> {
 
       await user.updateDisplayName(username);
 
-      await FirebaseFirestore.instance.collection('user').doc(user.uid).set({
-        'gender': gender,
-      });
+      // upsert user data into Supabase `user_account` table
+      try {
+        final supabase = Supabase.instance.client;
+        await supabase.from('user_account').upsert({
+          'id': user.uid,
+          'username': username,
+          'gender': gender,
+          'email': user.email,
+        }, onConflict: 'id');
+      } catch (e) {
+        // swallow errors but you may want to handle them in production
+      }
 
       await prefs.remove('pending_username_${user.email}');
       await prefs.remove('pending_gender_${user.email}');

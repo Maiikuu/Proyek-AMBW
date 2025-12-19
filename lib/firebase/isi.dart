@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'login.dart';
 
 class IsiPage extends StatelessWidget {
@@ -74,8 +74,9 @@ class IsiPage extends StatelessWidget {
       );
       await user.reauthenticateWithCredential(credential);
     }
-
-    await FirebaseFirestore.instance.collection('user').doc(user.uid).delete();
+    // delete user row from Supabase Postgres
+    final supabase = Supabase.instance.client;
+    await supabase.from('user_account').delete().eq('id', user.uid);
     await user.delete();
 
     if (context.mounted) {
@@ -91,6 +92,14 @@ class IsiPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
+    Future<Map<String, dynamic>?> getUserData() async {
+      if (user == null) return null;
+      final supabase = Supabase.instance.client;
+      final res = await supabase.from('user_account').select('gender, other_info').eq('id', user.uid).maybeSingle();
+      if (res == null) return null;
+      return Map<String, dynamic>.from(res as Map);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
@@ -102,21 +111,17 @@ class IsiPage extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('user')
-            .doc(user?.uid)
-            .snapshots(),
+      body: FutureBuilder<Map<String, dynamic>?>(
+        future: getUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (!snapshot.hasData || !snapshot.data!.exists) {
+          final userData = snapshot.data;
+          if (userData == null) {
             return const Center(child: Text('Data tidak ditemukan'));
           }
-
-          final userData = snapshot.data!.data() as Map<String, dynamic>;
 
           return Center(
             child: Column(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project/data/data_buku.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'login.dart';
 import 'verifikasiEmail.dart';
@@ -63,9 +64,27 @@ class _RegisterEmailPageState extends State<RegisterEmailPage> {
 
     await userCredential.user?.sendEmailVerification();
 
+    // store pending data locally for the verification step
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('pending_username_${userCredential.user?.email}', username);
     await prefs.setString('pending_gender_${userCredential.user?.email}', gender);
+
+    // insert initial user row into Supabase (can be updated after email verification)
+    try {
+      final supabase = Supabase.instance.client;
+      final uid = userCredential.user?.uid;
+      if (uid != null) {
+        await supabase.from('user_account').insert({
+          'id': uid,
+          'username': username,
+          'email': email,
+          'gender': gender,
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      }
+    } catch (e) {
+      // ignore Supabase errors here; verification step will still try to write
+    }
 
     Navigator.pushReplacement(
       context,

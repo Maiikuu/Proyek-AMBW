@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project/data/data_buku.dart';
@@ -73,10 +73,12 @@ class _LoginPageState extends State<LoginPage> {
 
         if (username != null && gender != null) {
           await user.updateDisplayName(username);
-          await FirebaseFirestore.instance.collection('user').doc(user.uid).set(
-              {
-                'gender': gender,
-              });
+          await Supabase.instance.client
+            .from('users')
+            .upsert({
+              'id': user.uid,
+              'gender': gender,
+            });
           await prefs.remove('username_temp_${user.email}');
           await prefs.remove('gender_temp_${user.email}');
         }
@@ -88,8 +90,7 @@ class _LoginPageState extends State<LoginPage> {
           // );
           Navigator.pushNamed(context, '/home');
         }
-      }
-    } on FirebaseAuthException catch (e) {
+      }} on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Terjadi kesalahan, silahkan diulang kembali')),
       );
@@ -116,9 +117,13 @@ class _LoginPageState extends State<LoginPage> {
     final user = userCredential.user;
     if (user == null) return;
 
-    final userDoc = await FirebaseFirestore.instance.collection('user').doc(user.uid).get();
+    final userDoc = await Supabase.instance.client
+    .from('users')
+    .select()
+    .eq('id', user.uid)
+    .maybeSingle();
 
-    if (userDoc.exists) {
+    if (userDoc != null) {
       if (mounted) {
         // Navigator.pushReplacement(
         //   context,
