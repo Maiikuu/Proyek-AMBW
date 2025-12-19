@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/data/data_buku.dart';
 import 'package:project/data/data_quiz.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class QuizResultPage extends StatefulWidget {
@@ -15,7 +15,6 @@ class QuizResultPage extends StatefulWidget {
 
 class _QuizResultPageState extends State<QuizResultPage> {
 
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
@@ -29,27 +28,28 @@ class _QuizResultPageState extends State<QuizResultPage> {
 
     String app = judul;
     String? userId = user?.uid;
-
-    final query = await firestore
-        .collection('quiz')
-        .where('userId', isEqualTo: userId)
-        .where('namaItem', isEqualTo: widget.namaQuiz)
+    final supabase = Supabase.instance.client;
+    final existing = await supabase
+        .from('quiz')
+        .select('id, score')
+        .eq('userId', userId)
+        .eq('namaItem', widget.namaQuiz)
         .limit(1)
-        .get();
+        .maybeSingle();
 
-    if (query.docs.isNotEmpty) {
-      final docId = query.docs.first.id;
-      final highScore = query.docs.first.data()['score'] ?? 0;
+    if (existing != null) {
+      final docId = existing['id'];
+      final highScore = (existing['score'] ?? 0) as int;
       if (widget.score > highScore) {
-        await firestore.collection('quiz').doc(docId).update({
+        await supabase.from('quiz').update({
           'score': widget.score,
           'app': app,
           'userId': userId,
           'namaItem': widget.namaQuiz,
-        });
+        }).eq('id', docId);
       }
     } else {
-      await firestore.collection('quiz').add({
+      await supabase.from('quiz').insert({
         'app': app,
         'userId': userId,
         'namaItem': widget.namaQuiz,

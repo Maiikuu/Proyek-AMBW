@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/data/data_buku.dart';
 import '../firebase/login.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -24,17 +24,18 @@ class _PengaturanState extends State<Pengaturan> {
 
   Future<void> getScore() async{
     final user = FirebaseAuth.instance.currentUser;
-    final query = await FirebaseFirestore.instance
-        .collection('quiz')
-        .where('userId', isEqualTo: user?.uid)
-        .where('app', isEqualTo: 'MUSA')
-        .get();
+    final supabase = Supabase.instance.client;
+    final res = await supabase
+        .from('quiz')
+        .select('score')
+        .eq('userId', user?.uid)
+        .eq('app', 'MUSA')
+        .execute();
 
-    if (query.docs.isNotEmpty) {
+    if (res.error == null && res.data != null) {
       num total = 0;
-      for (var doc in query.docs) {
-        final score = doc.data()['score'];
-        total += score;
+      for (final row in (res.data as List)) {
+        total += (row['score'] ?? 0) as num;
       }
       setState(() {
         userScore = total.toInt();
@@ -135,7 +136,8 @@ class _PengaturanState extends State<Pengaturan> {
       await user.reauthenticateWithCredential(credential);
     }
 
-    await FirebaseFirestore.instance.collection('user').doc(user.uid).delete();
+    final supabase = Supabase.instance.client;
+    await supabase.from('user_account').delete().eq('id', user.uid);
     await user.delete();
 
     if (context.mounted) {

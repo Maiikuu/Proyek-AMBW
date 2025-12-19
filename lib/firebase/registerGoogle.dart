@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/data_buku.dart';
 import 'isi.dart';
@@ -37,9 +37,18 @@ class _RegisterGooglePageState extends State<RegisterGooglePage> {
 
     await user.updateDisplayName(username);
 
-    await FirebaseFirestore.instance.collection('user').doc(user.uid).set({
-      'gender': selectedGender,
-    });
+    // write user data to Supabase
+    try {
+      final supabase = Supabase.instance.client;
+      await supabase.from('user_account').upsert({
+        'id': user.uid,
+        'username': username,
+        'gender': selectedGender,
+        'email': user.email,
+      }, onConflict: 'id');
+    } catch (e) {
+      // ignore for now
+    }
 
     if (!mounted) return;
 
