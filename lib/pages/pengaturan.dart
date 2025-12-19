@@ -24,18 +24,25 @@ class _PengaturanState extends State<Pengaturan> {
 
   Future<void> getScore() async{
     final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
     final supabase = Supabase.instance.client;
-    final res = await supabase
+    final dynamic raw = await supabase
         .from('quiz')
         .select('score')
-        .eq('userId', user?.uid)
-        .eq('app', 'MUSA')
-        .execute();
+        .eq('userId', user.uid)
+        .eq('app', 'MUSA');
 
-    if (res.error == null && res.data != null) {
+    List<dynamic> rows = [];
+    if (raw is List) {
+      rows = raw;
+    } else if (raw is Map && raw['data'] != null) {
+      rows = List<dynamic>.from(raw['data'] as List);
+    }
+
+    if (rows.isNotEmpty) {
       num total = 0;
-      for (final row in (res.data as List)) {
-        total += (row['score'] ?? 0) as num;
+      for (final row in rows) {
+        total += ((row as Map)['score'] ?? 0) as num;
       }
       setState(() {
         userScore = total.toInt();

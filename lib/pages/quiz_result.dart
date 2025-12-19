@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/data/data_buku.dart';
 import 'package:project/data/data_quiz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 
 class QuizResultPage extends StatefulWidget {
   final int score;
@@ -15,7 +15,7 @@ class QuizResultPage extends StatefulWidget {
 
 class _QuizResultPageState extends State<QuizResultPage> {
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  final fb.FirebaseAuth auth = fb.FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -24,22 +24,35 @@ class _QuizResultPageState extends State<QuizResultPage> {
   }
 
   Future<void> uploadQuizResult() async {
-    User? user = auth.currentUser;
+    final fb.User? user = fb.FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      debugPrint('Belum Login');
+      return;
+    }
 
     String app = judul;
-    String? userId = user?.uid;
+    final String userId = user.uid;
     final supabase = Supabase.instance.client;
-    final existing = await supabase
+    final dynamic raw = await supabase
         .from('quiz')
         .select('id, score')
         .eq('userId', userId)
         .eq('namaItem', widget.namaQuiz)
-        .limit(1)
-        .maybeSingle();
+        .limit(1);
+
+    List<dynamic> rows = [];
+    if (raw is List) {
+      rows = raw;
+    } else if (raw is Map && raw['data'] != null) {
+      rows = List<dynamic>.from(raw['data'] as List);
+    }
+
+    Map<String, dynamic>? existing = rows.isNotEmpty ? Map<String, dynamic>.from(rows.first as Map) : null;
 
     if (existing != null) {
       final docId = existing['id'];
-      final highScore = (existing['score'] ?? 0) as int;
+      final highScore = ((existing['score'] ?? 0) as num).toInt();
       if (widget.score > highScore) {
         await supabase.from('quiz').update({
           'score': widget.score,
