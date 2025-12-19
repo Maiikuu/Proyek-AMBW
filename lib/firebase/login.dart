@@ -69,18 +69,22 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null && user.emailVerified) {
         final prefs = await SharedPreferences.getInstance();
         final username = prefs.getString('pending_username_${user.email}');
-        final gender = prefs.getString('gender_temp_${user.email}');
+        final gender = prefs.getString('pending_gender_${user.email}');
 
         if (username != null && gender != null) {
           await user.updateDisplayName(username);
           await Supabase.instance.client
-            .from('users')
+            .from('user_account')
             .upsert({
               'id': user.uid,
+              'username': username,
+              'email': user.email,
               'gender': gender,
-            });
-          await prefs.remove('username_temp_${user.email}');
-          await prefs.remove('gender_temp_${user.email}');
+            },
+            // ensure conflict on primary key 'id' uses upsert
+            );
+          await prefs.remove('pending_username_${user.email}');
+          await prefs.remove('pending_gender_${user.email}');
         }
 
         if (mounted) {
@@ -118,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user == null) return;
 
     final userDoc = await Supabase.instance.client
-    .from('users')
+    .from('user_account')
     .select()
     .eq('id', user.uid)
     .maybeSingle();
