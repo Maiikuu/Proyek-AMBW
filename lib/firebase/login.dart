@@ -4,10 +4,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project/data/data_buku.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'isi.dart';
 import 'registerEmail.dart';
 import 'registerGoogle.dart';
 import 'lupaPassword.dart';
+import 'verifikasiEmail.dart';
 import 'package:flutter/material.dart';
 
 
@@ -44,22 +44,9 @@ class _LoginPageState extends State<LoginPage> {
         await FirebaseAuth.instance.signOut();
 
         if (mounted) {
-          showDialog(
-            context: context,
-            builder: (_) =>
-                AlertDialog(
-                  backgroundColor: Colors.white,
-                  title: const Text('Verifikasi Email'),
-                  content: const Text(
-                    'Kami telah mengirimkan email verifikasi untuk akun anda.',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Ok'),
-                    ),
-                  ],
-                ),
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const VerifikasiEmailPage()),
           );
         }
         return;
@@ -94,10 +81,12 @@ class _LoginPageState extends State<LoginPage> {
           // );
           Navigator.pushNamed(context, '/home');
         }
-      }} on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan, silahkan diulang kembali')),
-      );
+      }} on FirebaseAuthException {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Terjadi kesalahan, silahkan diulang kembali')),
+        );
+      }
     }
   }
 

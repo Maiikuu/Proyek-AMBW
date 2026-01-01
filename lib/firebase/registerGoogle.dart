@@ -10,10 +10,10 @@ class RegisterGooglePage extends StatefulWidget {
   final String? initialUsername;
 
   const RegisterGooglePage({
-    Key? key,
+    super.key,
     required this.email,
     this.initialUsername,
-  }) : super(key: key);
+  });
 
   @override
   State<RegisterGooglePage> createState() => _RegisterGooglePageState();

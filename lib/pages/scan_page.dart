@@ -14,7 +14,7 @@ class CameraView extends StatelessWidget {
       appBar: AppBar(
         leading: BackButton(
           style: ButtonStyle(
-            iconSize: MaterialStateProperty.all(35),
+            iconSize: WidgetStateProperty.all(35),
           ),
           onPressed: () {
             Navigator.pushNamed(context, '/home');

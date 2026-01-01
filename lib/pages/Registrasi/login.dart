@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
                 spacing: screenHeight * 0.02,
                 children: [
                   OutlinedButton(
-                    onPressed: () => null,
+                    onPressed: () {},
                   
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black, 
@@ -68,7 +68,7 @@ class _LoginState extends State<Login> {
                     ),
                   
                   OutlinedButton(
-                    onPressed: () => null,
+                    onPressed: () {},
                   
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.black, 

@@ -3,10 +3,8 @@ import 'package:project/firebase/login.dart';
 import 'package:project/pages/daftar_cerita.dart';
 import 'package:project/pages/home.dart';
 import 'package:project/pages/pengaturan.dart';
-import 'package:project/pages/quiz_result.dart';
 import 'package:project/pages/scan_page.dart';
 import 'package:project/pages/splash_screen.dart';
-import 'package:project/pages/quiz_page.dart';
 
 class App extends StatefulWidget {
   const App({super.key});

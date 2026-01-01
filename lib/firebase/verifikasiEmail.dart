@@ -93,9 +93,29 @@ class _VerifikasiEmailPageState extends State<VerifikasiEmailPage> {
                   ),
                   const SizedBox(height: 40),
                   const Text(
-                    'Silakan cek email Anda dan klik link verifikasi.',
+                    'Silakan cek email Anda dan klik link verifikasi.\nJika tidak ada, periksa folder spam/junk.',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Email verifikasi dikirim ulang')),
+                          );
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Gagal kirim ulang: ${e.toString()}')),
+                          );
+                        }
+                      }
+                    },
+                    child: const Text('Kirim Ulang Email Verifikasi'),
                   ),
                   const SizedBox(height: 24),
                   const CircularProgressIndicator(),

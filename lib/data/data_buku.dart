@@ -50,12 +50,10 @@ const List<List<String>> HALAMAN = [
   ["Tuhan Berbelas Kasih", URL_placeholder]
 ];
 
-/**
- * Format:
- * [Bab]
- * [List Item]
- * [Judul Item, Deskripsi Item, Gambar Item, Audio Item]
- */
+/// Format:
+/// [Bab]
+/// [List Item]
+/// [Judul Item, Deskripsi Item, Gambar Item, Audio Item]
 const List<List<List<String>>> DETAIL_ITEM = [
   [
     [

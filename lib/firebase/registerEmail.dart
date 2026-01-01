@@ -43,6 +43,15 @@ class _RegisterEmailPageState extends State<RegisterEmailPage> {
       return;
     }
 
+    // Validasi format email
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    if (!emailRegex.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Format email tidak valid')),
+      );
+      return;
+    }
+
     if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Password tidak boleh kosong')),
@@ -62,7 +71,18 @@ class _RegisterEmailPageState extends State<RegisterEmailPage> {
       password: password,
     );
 
-    await userCredential.user?.sendEmailVerification();
+    try {
+      await userCredential.user?.sendEmailVerification();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal mengirim email verifikasi: ${e.toString()}')),
+        );
+      }
+      // Hapus user jika gagal kirim email
+      await userCredential.user?.delete();
+      return;
+    }
 
     // store pending data locally for the verification step
     final prefs = await SharedPreferences.getInstance();
@@ -86,12 +106,14 @@ class _RegisterEmailPageState extends State<RegisterEmailPage> {
       // ignore Supabase errors here; verification step will still try to write
     }
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => VerifikasiEmailPage(),
-      ),
-    );
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => VerifikasiEmailPage(),
+        ),
+      );
+    }
   }
 
   Future<void> login() async {
@@ -109,7 +131,7 @@ class _RegisterEmailPageState extends State<RegisterEmailPage> {
       appBar:  AppBar(
         leading: BackButton(
           style: ButtonStyle(
-            iconSize: MaterialStateProperty.all(35),
+            iconSize: WidgetStateProperty.all(35),
           ),
           onPressed: () {
             Navigator.pushNamed(context, '/login');

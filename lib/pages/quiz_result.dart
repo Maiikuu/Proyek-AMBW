@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project/data/data_buku.dart';
-import 'package:project/data/data_quiz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 

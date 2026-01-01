@@ -3,6 +3,7 @@ import 'package:project/data/data_buku.dart';
 import 'package:project/pages/scan_controller.dart';
 import 'package:project/pages/scan_page.dart';
 import 'package:stroke_text/stroke_text.dart';
+import 'package:project/pages/test_firestore_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // final FirestoreService _firestoreService = FirestoreService();
+
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -117,6 +120,35 @@ class _HomePageState extends State<HomePage> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 65),
                             child: Text('Scan Buku', 
+                              textAlign: TextAlign.right, 
+                              style: TextStyle(fontSize: 22, color: Colors.black)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  ElevatedButton(
+                    onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TestFirestorePage()),
+                      )
+                    },
+                  
+                    style: FilledButton.styleFrom(backgroundColor: Colors.white, fixedSize: Size(320, 75)),
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: 
+                            Icon(Icons.cloud, color: Colors.black, size: 35),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 65),
+                            child: Text('Test Firestore', 
                               textAlign: TextAlign.right, 
                               style: TextStyle(fontSize: 22, color: Colors.black)),
                           ),

@@ -36,9 +36,7 @@ class _QuizPageState extends State<QuizPage> {
   Color button2Color = Color.fromARGB(255, 25, 185, 221);
   Color button3Color = Color.fromARGB(255, 25, 185, 221);
 
-  /**
-   * returns the order of the questions in the quiz randomized
-   */
+  /// returns the order of the questions in the quiz randomized
   List<int> randomizeQuestions() {
     List<int> questionNumbers = [];
     for (int i = 0; i < widget.questions.length; i++) {
@@ -117,8 +115,8 @@ class _QuizPageState extends State<QuizPage> {
                     child: Column(
                       children: [
                         SizedBox(height: screenHeight * 0.03),
-                        Text("Quiz " + questionNumber.toString(), style: TextStyle(fontSize: screenHeight * 0.05, color: Colors.orange, fontWeight: FontWeight.bold)),
-                        Text("+" + score.toString() + " poin", style: TextStyle(fontSize: screenHeight * 0.03, color: Colors.orange, fontWeight: FontWeight.bold)),
+                        Text("Quiz $questionNumber", style: TextStyle(fontSize: screenHeight * 0.05, color: Colors.orange, fontWeight: FontWeight.bold)),
+                        Text("+$score poin", style: TextStyle(fontSize: screenHeight * 0.03, color: Colors.orange, fontWeight: FontWeight.bold)),
                         SizedBox(height: screenHeight * 0.01),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -215,7 +213,7 @@ class _QuizPageState extends State<QuizPage> {
                           },
                           child: Row(
                             children: [
-                              Text("Quiz" + (questionNumber + 1).toString(), style: TextStyle(color: Colors.black, fontSize: screenWidth * 0.07),),
+                              Text("Quiz${questionNumber + 1}", style: TextStyle(color: Colors.black, fontSize: screenWidth * 0.07),),
                               Icon(Icons.keyboard_arrow_right, color: Colors.black, size: screenWidth * 0.055),
                             ],
                           )
@@ -229,11 +227,9 @@ class _QuizPageState extends State<QuizPage> {
       ),
     );
   }
-  /**
-   * Option button
-   * current question = data pertanyaan
-   * option = index dari option
-   */
+  /// Option button
+  /// current question = data pertanyaan
+  /// option = index dari option
   ElevatedButton questionButton(QuizQuestion currentQuestion, int option, Color color, var screenWidth, var screenHeight, BuildContext context) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -339,9 +335,7 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  /**
-   * background image
-   */
+  /// background image
   Positioned background() {
     return Positioned.fill(
       child: DecoratedBox(
